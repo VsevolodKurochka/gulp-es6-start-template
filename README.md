@@ -1,6 +1,7 @@
 # Gulp ES6 Start Template
 This is the starting template, for those who want to use ES6 Features(import, export) in their own projects.
 
+![Gulp ES6 Start Template](https://drive.google.com/uc?export=view&id=1lWUOIsAgrNWNMGO_LrSMTqtdpnShF0Ms)
 ## How to install it?
 Choose the folder you need
 ```
