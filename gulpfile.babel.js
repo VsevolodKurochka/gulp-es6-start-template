@@ -5,6 +5,7 @@
 import gulp 						from 'gulp';
 import install 					from 'gulp-install';
 import notify 					from 'gulp-notify';
+import browserSync from 'browser-sync';
 
 // JS
 
@@ -13,17 +14,30 @@ import source 					from 'vinyl-source-stream';
 import babelify 				from "babelify";
 
 // Init browserSync
-const browserSync = require('browser-sync').create();
+const server = browserSync.create();
 
-// Install packages From package.json
-// Usage: npm install
+// Install packages From package.json. Usage: npm install
 gulp.src(['./package.json'])
 	.pipe(install())
 
+// Server
+function reload(done) {
+  server.reload();
+  done();
+}
+function serve(done) {
+  server.init({
+    server: {
+      baseDir: './app',
+      notify: true
+    }
+  });
+  done();
+}
 
 // JS
 
-gulp.task('es6', () =>
+gulp.task('scripts', () =>
 	browserify({
 		entries: './app/babel/app.js',
 		debug: true
@@ -42,27 +56,23 @@ gulp.task('es6', () =>
 	.pipe(gulp.dest('app/js'))
 );
 
-gulp.task('es6:watch', gulp.parallel(browserSync.reload, () => {
-	gulp.watch("app/babel/**/*.js", gulp.series('es6'));
-}));
+gulp.task('scripts:watch', () => {
+	gulp.watch("app/babel/**/*.js", gulp.series('scripts', reload));
+});
 
 gulp.task('html:watch', () => {
-	gulp.watch("app/**/*.html").on('all', browserSync.reload);
+	gulp.watch("app/**/*.html").on('change', browserSync.reload);
 });
 
-gulp.task('server:watch', () => {
-	browserSync.init({
-		server: "./app",
-		notify: true
-	});
-});
+
+
 
 // Your "watch" task
 gulp.task(
 	'watch', 
 	gulp.parallel(
-		'server:watch',
-		'es6:watch',
+		serve,
+		'scripts:watch',
 		'html:watch'
 	)
 );
