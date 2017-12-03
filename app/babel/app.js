@@ -2,8 +2,8 @@ import {message} from './modules/message';
 import {create} from './modules/create';
 
 const messages = {
-	bodyMessage: message('Check the Console! Nah'),
-	consoleMessage: message('App Worksaaa!')
+	bodyMessage: message('Check the Console!'),
+	consoleMessage: message('App Works!')
 }
 
 console.info(messages.consoleMessage);
